@@ -1,0 +1,20 @@
+[package]
+name = "ridicrypt-py"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ridicrypt-core = { path = "../../core" }
+pyo3 = { version = "0.25", features = ["extension-module"] }
+
+[profile.release]
+codegen-units = 1
+debug = false
+incremental = false
+lto = "fat"
+opt-level = "s"
+panic = "abort"
+strip = true
