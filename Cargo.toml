@@ -8,7 +8,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ridicrypt-core = { path = "../../core" }
-pyo3 = { version = "0.25", features = ["extension-module"] }
+pyo3 = { version = "0.25", features = ["extension-module", "abi3-py37"] }
 
 [profile.release]
 codegen-units = 1
