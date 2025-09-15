@@ -1,28 +1,32 @@
 import sys
+from pathlib import Path
 
-from ridicrypt import decrypt, global_key, settings
+from ridicrypt import decrypt, settings, utils
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: python decrypt.py <epub_file> <dat_file> <output_file> <method:legacy|new>")
+    if len(sys.argv) != 4:
+        print(
+            "Usage: python decrypt.py <encrypted_file> <dat_file> <output_file>"
+        )
         sys.exit(1)
 
-    epub_file = sys.argv[1]
+    encrypted_file = sys.argv[1]
     dat_file = sys.argv[2]
     output_file = sys.argv[3]
-    method = sys.argv[4]
 
-    global_key = global_key.get()
-    settings = settings.decrypt(global_key)
+    global_key = utils.get_global_key()
+    settings = settings.decrypt(global_key, utils.get_settings_path())
     device_id = settings.data.device.device_id
-    epub_key = decrypt.to_str(device_id[:16].encode('utf-8'), dat_file)[68:84]
-    epub_key_bytes = epub_key.encode('utf-8')
-    if method == "legacy":
-        decrypt.zip_legacy(
-            epub_key_bytes, epub_file, output_file
-        )
-    elif method == "new":
-        decrypt.zip(
-            epub_key_bytes, epub_file, output_file
-        )
-    print(f"Decrypted {epub_file} to {output_file}")
+    key = decrypt.to_str(device_id[:16], dat_file)[68:84]
+
+    try:
+        if Path(encrypted_file).suffix == ".epub":
+            try:
+                decrypt.zip(key, encrypted_file, output_file)
+            except RuntimeError:
+                decrypt.binary(key, encrypted_file, output_file)
+        decrypt.binary(key, encrypted_file, output_file)
+        print(f"Decrypted {encrypted_file} to {output_file}")
+    except RuntimeError as e:
+        print(f"Decryption failed: {e}")
+        sys.exit(1)

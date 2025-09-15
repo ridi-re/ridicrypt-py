@@ -1,6 +1,8 @@
 use pyo3::prelude::*;
 use ridicrypt_core::settings;
 
+use crate::py_utils::IntoPyResult;
+
 #[pyclass]
 pub struct Settings {
     inner: settings::Settings,
@@ -78,10 +80,10 @@ impl Device {
 }
 
 #[pyfunction]
-pub fn decrypt(key: &str) -> PyResult<Settings> {
-    settings::decrypt(key)
+pub fn decrypt(key: &str, path: &str) -> PyResult<Settings> {
+    settings::decrypt(key, path)
         .map(|s| Settings { inner: s })
-        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
+        .into_py()
 }
 
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {

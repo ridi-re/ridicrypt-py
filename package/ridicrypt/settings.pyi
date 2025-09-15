@@ -118,7 +118,7 @@ class Device:
             A human-readable name or nickname assigned to this device.
         """
 
-def decrypt(key: str) -> "Settings":
+def decrypt(key: str, path: str) -> "Settings":
     """Decrypt and parse a RIDI settings file.
 
     This function decrypts an encrypted RIDI settings file using a custom AES
@@ -126,7 +126,7 @@ def decrypt(key: str) -> "Settings":
     padding, checksum verification, and JSON parsing of the decrypted content.
 
     The decryption process:
-    1. Reads the encrypted settings file from the system location
+    1. Reads the encrypted settings file from the specified path
     2. Validates the file signature and checksum
     3. Applies PKCS7 padding to the key if needed based on UTF-16 length
     4. Performs AES-ECB decryption using CryptoJS-compatible implementation
@@ -137,6 +137,7 @@ def decrypt(key: str) -> "Settings":
         key: The decryption key as a string. The key will be processed according
             to CryptoJS UTF-8 parsing and may be PKCS7-padded to a 16-byte boundary
             depending on its UTF-16 character length.
+        path: The file path to the encrypted settings file to decrypt.
 
     Returns:
         A Settings object containing the parsed settings data with user
@@ -148,12 +149,13 @@ def decrypt(key: str) -> "Settings":
             invalid PKCS7 padding, or the decrypted data is not valid JSON.
 
     Example:
-        >>> settings = decrypt("my_decryption_key")
+        >>> from ridicrypt import utils
+        >>> settings_path = utils.get_settings_path()
+        >>> settings = decrypt("my_decryption_key", settings_path)
         >>> print(f"Username: {settings.data.auto_login.username}")
         >>> print(f"Device: {settings.data.device.device_nick}")
 
     Note:
-        This function automatically locates the settings file in the system's
-        standard location for RIDI application data. The exact location varies
-        by operating system.
+        You can use utils.get_settings_path() to get the default system location
+        for the RIDI settings file, which varies by operating system.
     """

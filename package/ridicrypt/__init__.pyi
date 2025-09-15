@@ -9,4 +9,4 @@ Modules:
     settings: Classes and functions for handling encrypted settings data.
 """
 
-from . import decrypt, global_key, settings
+from . import decrypt, settings, utils
