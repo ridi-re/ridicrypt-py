@@ -9,6 +9,6 @@ Modules:
     settings: Classes and functions for handling encrypted settings data.
 """
 
-from .ridicrypt import decrypt, settings, utils
+from .ridicrypt import datastores, decrypt, utils
 
-__all__ = ["decrypt", "settings", "utils"]
+__all__ = ["datastores", "decrypt", "utils"]

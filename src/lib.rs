@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 
+mod datastores;
 mod decrypt;
-mod settings;
 mod utils;
 
 mod py_utils;
@@ -12,9 +12,9 @@ fn ridicrypt(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     decrypt::register(&decrypt_mod)?;
     m.add_submodule(&decrypt_mod)?;
 
-    let settings_mod = PyModule::new(_py, "settings")?;
-    settings::register(&settings_mod)?;
-    m.add_submodule(&settings_mod)?;
+    let datastores_mod = PyModule::new(_py, "datastores")?;
+    datastores::register(&datastores_mod)?;
+    m.add_submodule(&datastores_mod)?;
 
     let utils_mod = PyModule::new(_py, "utils")?;
     utils::register(&utils_mod)?;

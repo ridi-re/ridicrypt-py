@@ -1,13 +1,12 @@
+import json
 import sys
 from pathlib import Path
 
-from ridicrypt import decrypt, settings, utils
+from ridicrypt import datastores, decrypt, utils
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print(
-            "Usage: python decrypt.py <encrypted_file> <dat_file> <output_file>"
-        )
+        print("Usage: python decrypt.py <encrypted_file> <dat_file> <output_file>")
         sys.exit(1)
 
     encrypted_file = sys.argv[1]
@@ -15,8 +14,15 @@ if __name__ == "__main__":
     output_file = sys.argv[3]
 
     global_key = utils.get_global_key()
-    settings = settings.decrypt(global_key, utils.get_settings_path())
-    device_id = settings.data.device.device_id
+    settings = json.loads(
+        datastores.decrypt(
+            global_key,
+            (Path(utils.get_ridi_data_path()) / "datastores/global/Settings")
+            .resolve()
+            .as_posix(),
+        )
+    )
+    device_id = settings["data"]["device"]["deviceId"]
     key = decrypt.to_str(device_id[:16], dat_file)[68:84]
 
     try:

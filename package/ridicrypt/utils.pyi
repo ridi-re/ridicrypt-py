@@ -31,25 +31,25 @@ def get_global_key() -> str:
         16
     """
 
-def get_settings_path() -> str:
-    """Get the OS-specific path to the RIDI encrypted settings file.
+def get_ridi_data_path() -> str:
+    """Get the OS-specific path to the RIDI application data directory.
 
-    Resolves and returns the absolute path to the RIDI settings datastore file
+    Resolves and returns the absolute path to the RIDI application data directory
     used by the application. The location depends on the operating system:
 
-    - Windows: ``%APPDATA%\\Ridibooks\\datastores\\global\\Settings``
-    - macOS: ``$HOME/Library/Application Support/Ridibooks/datastores/global/Settings``
+    - Windows: ``%APPDATA%\\Ridibooks``
+    - macOS: ``$HOME/Library/Application Support/Ridibooks``
 
     Returns:
-        The absolute file system path to the settings file as a string.
+        The absolute file system path to the data directory as a string.
 
     Raises:
         RuntimeError: If required environment variables are not set or if the
             path cannot be constructed.
 
     Example:
-        >>> path = get_settings_path()
-        >>> path.endswith("Settings")
+        >>> path = get_ridi_data_path()
+        >>> path.endswith("Ridibooks")
         True
     """
 
